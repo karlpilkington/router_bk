@@ -1,0 +1,35 @@
+--------------------------------------
+
+Mandar Gokhale, EECS 489 - PA3 (mandarg/82170218)
+
+--------------------------------------
+
+Design
+
+The router is designed to handle Ethernet packets of types ARP and IP. Separate handler functions are used for IP packets (non-ICMP) and IP packets (ICMP).
+The design is outlined hereafter
+
+
+ARP:
+The ARP requests and replies are handled in sr_arp_table.c. This handles getting and setting of ARP table entries and refreshes the table after a given TTL (60s default)
+
+Buffering:
+
+Packets that cannot be processed immediately are queued in a buffer in sr_buf.c. A buffer implemented as a doubly-linked list is used. Separate functions are used to allocate and free buffer memory
+
+IP/ICMP/TRACEROUTE
+
+Functions for handling IP packets are in sr_ip.c. This includes ICMP echo requests, traceroute, and non-ICMP IP packets. This also has the checksum routine. Packets intended for application servers are routed in here.  
+
+Router core:
+
+The main functions of the router are in sr_router.c. Traffic not intended for our subnet is dropped. This calls handler functions for handling IP packets and ARP requests and replies described as above, and tries to clear router backlog before sending 
+
+Main:
+
+Routing and interface tables, as well as packet buffer are cleared before exiting
+
+Makefile:
+
+'make tst' starts up the server with topology 494 and username MANDARG. ping, traceroute, and browser tests working.
+
